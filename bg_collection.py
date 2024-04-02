@@ -12,7 +12,7 @@ class BGCollection:
     def add(self, name: str, owner: str, dummy=True):
         bgg = BGGClient()
         data = bgg.game(name)
-        bgg_json = json.dump(data)
+        bgg_json = json.dumps(data)
         query = ("INSERT INTO bg_coll VALUES "
                  "(id, bgg_data, club_data, dummy)"
                  "VALUES (%s, %s, %s, %s)")
