@@ -7,15 +7,23 @@
     <link rel="stylesheet" href="/static/bulma.min.css">
   </head>
   <body>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-        Hello BCG
-      </h1>
-      <p class="subtitle">
-        My first website with <strong>Bulma</strong>!
-      </p>
-	    <table class="table">
+ 	<div class="container">
+		<div class="field is-horizontal">
+		  <div class="field-label is-normal">
+		    <label class="label">Filter Query</label>
+		  </div>
+		  <div class="field-body">
+		    <div class="field has-addons">
+		      <div class="control is-expanded">
+		        <input class="input" type="text">
+		      </div>
+			  <div class="control">
+			    <button class="button" type="submit">Apply</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<table class="table">
 		    <thead>
 		        <tr>
 			        <th>ID</th>
@@ -40,8 +48,7 @@
 		        </tr>
 		        {% endfor %}
 		    </tbody>
-	    </table>
+		</table>
     </div>
-  </section>
   </body>
 </html>

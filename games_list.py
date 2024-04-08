@@ -25,6 +25,10 @@ class GamesList:
             return json.load(fp)
 
     @classmethod
+    def fetch_with_filter(cls, _filter:str) -> List:
+        return cls._apply_filter(cls.fetch_all(), _filter)
+
+    @classmethod
     def fetch_by_owner(cls, owner: str) -> List:
         gl = cls.fetch_all()
         return [g for g in gl if owner in g.get("owners", [])]
@@ -94,14 +98,40 @@ class GamesList:
             with open(_JSON_FILE, "w") as fp:
                 json.dump(gl, fp)
 
+    @classmethod
+    def _apply_filter(cls, data, filter_string):
+        filtered_data = data[:]
+        filters = filter_string.strip().split()
+
+        for filter_item in filters:
+            attribute, operator, value = None, None, None
+
+            for sep in ['>', '<', '~', ':']:
+                if sep in filter_item:
+                    attribute, operator, value = filter_item.partition(sep)
+                    operator = operator.strip()
+                    value = value.strip()
+                    break
+
+            if operator == '>':
+                filtered_data = [item for item in filtered_data if item.get(attribute, 0) > float(value)]
+            elif operator == '<':
+                filtered_data = [item for item in filtered_data if item.get(attribute, 0) < float(value)]
+            elif operator == '~':
+                filtered_data = [item for item in filtered_data if value.lower() in item.get(attribute, '').lower()]
+            elif operator == ':':
+                filtered_data = [item for item in filtered_data if item.get(attribute) == value]
+
+        return filtered_data
 
 
 
 if __name__ == "__main__":
 
-    gl = GamesList.fetch_all()
-
-    for game in gl:
-        print(f"{game['name']}")
+    GamesList.add_game("Heat: Pedal to the Metal", [])
+    GamesList.add_game("Greedy Greedy Goblins", [])
+    GamesList.add_game("Modern Art", [])
+    GamesList.add_game("Monopoly", [])
+    GamesList.add_game("Risk", [])
 
     pass
