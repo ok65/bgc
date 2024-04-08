@@ -3,22 +3,28 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
+    <title>Hello BCG!</title>
     <link rel="stylesheet" href="/static/bulma.min.css">
   </head>
   <body>
   <section class="section">
     <div class="container">
       <h1 class="title">
-        Hello World
+        Hello BCG
       </h1>
       <p class="subtitle">
         My first website with <strong>Bulma</strong>!
       </p>
-	    <table>
+	    <table class="table">
 		    <thead>
 		        <tr>
-			        <th>ID</th><th>Name</th>
+			        <th>ID</th>
+			        <th>Name</th>
+			        <th>Categories</th>
+			        <th>Designers</th>
+			        <th>Players Min</th>
+			        <th>Players Max</th>
+			        <th>BGG Ranking</th>
 		        </tr>
 		    </thead>
 		    <tbody>
@@ -26,6 +32,11 @@
 		        <tr>
 			        <td>{{ game["bgg_id"] }}</td>
 			        <td>{{ game["name"] }}</td>
+			        <td>{{ game["categories"]|join(", ") }}</td>
+			        <td>{{ game["designers"]|join(", ") }}</td>
+			        <td>{{ game["players_min"] }}</td>
+			        <td>{{ game["players_max"] }}</td>
+			        <td>{{ game["bgg_ranking"] }}</td>
 		        </tr>
 		        {% endfor %}
 		    </tbody>
