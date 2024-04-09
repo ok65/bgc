@@ -120,7 +120,7 @@ class GamesList:
             elif operator == '~':
                 filtered_data = [item for item in filtered_data if value.lower() in item.get(attribute, '').lower()]
             elif operator == ':':
-                filtered_data = [item for item in filtered_data if item.get(attribute) == value]
+                filtered_data = [item for item in filtered_data if str(item.get(attribute)) == str(value)]
 
         return filtered_data
 
