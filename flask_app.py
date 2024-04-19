@@ -17,6 +17,10 @@ def hello_world():
     gl = GamesList.fetch_with_filter(query) if query else GamesList.fetch_all()
     return render_template("home.html", games_list=gl)
 
+@app.route("/search.html", methods=["GET", "POST"])
+def search():
+    pass
+
 
 if __name__ == "__main__":
 

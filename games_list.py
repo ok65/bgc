@@ -61,7 +61,8 @@ class GamesList:
                 "bgg_ranking": bgg_data["stats"]["ranks"][0]["value"],
                 "owners": owners,
                 "bgc_rating": -1,
-                "bgc_stats": []
+                "bgc_stats": [],
+                "year": bgg_data["yearpublished"]
                 }
 
         lock = FileLock(_LOCK_FILE)
@@ -120,7 +121,10 @@ class GamesList:
             elif operator == '~':
                 filtered_data = [item for item in filtered_data if value.lower() in item.get(attribute, '').lower()]
             elif operator == ':':
-                filtered_data = [item for item in filtered_data if str(item.get(attribute)) == str(value)]
+                if value.isnumeric():
+                    filtered_data = [item for item in filtered_data if str(value) == str(item.get(attribute))]
+                else:
+                    filtered_data = [item for item in filtered_data if str(value) in str(item.get(attribute))]
 
         return filtered_data
 
@@ -128,10 +132,71 @@ class GamesList:
 
 if __name__ == "__main__":
 
-    GamesList.add_game("Heat: Pedal to the Metal", [])
-    GamesList.add_game("Greedy Greedy Goblins", [])
-    GamesList.add_game("Modern Art", [])
-    GamesList.add_game("Monopoly", [])
-    GamesList.add_game("Risk", [])
+    big_list = ["Wavelength",
+    "Mysterium",
+    "Monikers",
+    "7 wonders",
+    "Magic maze",
+    "6 Nimmt",
+    "Sushi go party",
+    "Game of thrones",
+    "Citadels",
+    "Zoo Vadis",
+    "Scythe",
+    "Perudo / Liars dice",
+    "King of tokyo",
+    "Lords of waterdeep",
+    "Coup",
+    "Love letter",
+    "Ra",
+    "Modern Art",
+    "Pictomania",
+    "Carcassone",
+    "Dixit",
+    "Men at work",
+    "colt express",
+    "Heat! Pedal to the metal",
+    "Istanbul",
+    "The crew",
+    "Exploding kittens",
+    "Bohnanza",
+    "Cosmic encounter",
+    "Ethnos",
+    "Monopoly Deal",
+    "Chronicles of crime",
+    "Kemet",
+    "colt express",
+    "Dune",
+    "Pandemic",
+    "Splendor",
+    "Survive, escape from atlantis",
+    "Unlock 10",
+    "Inis",
+    "Root",
+    "Cubitos",
+    "Imperial settlers",
+    "Galaxy trucker",
+    "Cascadia",
+    "Great western trail",
+    "This war of mine",
+    "M11 at rush hour",
+    "Spirit Island",
+    "Arboretum",
+    "The",
+    "Quacks of Quedlinburg",
+    "Azul"]
+
+    for game in big_list:
+
+        try:
+            GamesList.add_game(game, [])
+        except:
+            print(f"Failed trying to add {game}")
+            continue
+        else:
+            print(f"Added {game} to db")
+
+    print("done")
 
     pass
+

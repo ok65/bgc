@@ -1,0 +1,5 @@
+:root {
+  /* Set new values */
+  --bulma-family-primary: "Comic Sans MS", "Comic Sans", cursive;
+  --bulma-primary: red;
+}

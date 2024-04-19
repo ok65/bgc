@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello BCG!</title>
-    <link rel="stylesheet" href="static/bulma.min.css">
-	  <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="/static/bulma.min.css">
   </head>
   <body>
  	<div class="container">
@@ -29,32 +28,7 @@
 			  </div>
 			</form>
 		</div>
-		<table class="table">
-		    <thead>
-		        <tr>
-			        <th>Name</th>
-			        <th>Year</th>
-			        <th>Categories</th>
-			        <th>Designers</th>
-			        <th>Players Min</th>
-			        <th>Players Max</th>
-			        <th>BGG Ranking</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        {% for game in games_list %}
-		        <tr>
-			        <td>{{ game["name"] }}</td>
-			        <td>{{ game["year"] }}</td>
-			        <td>{{ game["categories"]|join(", ") }}</td>
-			        <td>{{ game["designers"]|join(", ") }}</td>
-			        <td>{{ game["players_min"] }}</td>
-			        <td>{{ game["players_max"] }}</td>
-			        <td>{{ game["bgg_ranking"] }}</td>
-		        </tr>
-		        {% endfor %}
-		    </tbody>
-		</table>
+	
     </div>
   </body>
 </html>
