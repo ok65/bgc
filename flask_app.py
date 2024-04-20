@@ -19,7 +19,7 @@ def hello_world():
 
 @app.route("/search.html", methods=["GET", "POST"])
 def search():
-    pass
+    return render_template("base.html")
 
 
 if __name__ == "__main__":

@@ -20,14 +20,6 @@
 		  </div>
 		</form>
 	</div>
-	
-	<div class="fixed-grid">
-	    <div class="grid">
-	    {% for game in games_list %}
-		    <div class="cell"><img src="{{ game['thumbnail_url'] }}"></div>
-	        <div class="cell"><strong>{{ game['name'] }}</strong><p>{{ game['year'] }}</p></div>
-	    {% endfor %}
-	    </div>
-	</div>
+
 {% endblock %}
 

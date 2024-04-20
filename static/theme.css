@@ -2,4 +2,5 @@
   /* Set new values */
   --bulma-family-primary: "Comic Sans MS", "Comic Sans", cursive;
   --bulma-primary: red;
+  --bulma-body-background-color: #3C3C3C;
 }
