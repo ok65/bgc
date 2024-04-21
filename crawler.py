@@ -56,7 +56,7 @@ if __name__ == "__main__":
             mechanics = ", ".join([escape(x) for x in data.get("mechanics", [])])
             family = ", ".join([escape(x) for x in data.get("families", [])])
 
-            query = ("UPSERT INTO bgg_data "
+            query = ("INSERT INTO bgg_data "
                      "(game_id, name, image_url, thumb_url, categories, designers, artists, players_min, players_max, playtime_min, playtime_max, mechanics, family) "
                      f"VALUES ({game_id}, '{name}', '{image_url}', '{thumb_url}', '[{categories}]', '[{designers}]', '[{artists}]', {players_min}, {players_max}, {playtime_min}, {playtime_max}, '[{mechanics}]', '[{family}]')")
 
