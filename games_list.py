@@ -4,7 +4,7 @@ import time
 
 from filelock import Timeout, FileLock
 from typing import List, Dict, Optional
-from bgg_tools import bgg_lookup
+#from bgg_tools import bgg_lookup
 
 _JSON_FILE = "games_list.json"
 _LOCK_FILE = "games_list.json.LOCK"
@@ -39,6 +39,7 @@ class GamesList:
         results = [g for g in gl if g.get("bgg_id") == bgg_id]
         return results[0] if results else None
 
+    """
     @classmethod
     def add_game(cls, name: str, owners: List):
 
@@ -71,7 +72,7 @@ class GamesList:
             gl.append(game)
             with open(_JSON_FILE, "w") as fp:
                 json.dump(gl, fp)
-
+    """
     @classmethod
     def add_owners(cls, bgg_id: int, owners: List):
 

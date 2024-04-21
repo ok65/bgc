@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request, redirect
 from games_list import GamesList
+from bgg_tools import *
 
 app = Flask(__name__)
 
@@ -17,9 +18,12 @@ def hello_world():
     gl = GamesList.fetch_with_filter(query) if query else GamesList.fetch_all()
     return render_template("home.html", games_list=gl)
 
+
 @app.route("/search.html", methods=["GET", "POST"])
 def search():
-    return render_template("base.html")
+    search_str = request.values.get("search_query")
+    results = bgg_search(search_str) if search_str else []
+    return render_template("search.html", search_list=results)
 
 
 if __name__ == "__main__":
