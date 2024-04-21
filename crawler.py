@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
             data = bgg.game(game_id=game_id).data()
 
-            name = json.dumps(data.get("name"))
+            name = escape(data.get("name"))
             image_url = escape(data.get("image"))
             thumb_url = escape(data.get("thumbnail"))
             categories = ", ".join([escape(x) for x in data.get("categories", [])])
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             mechanics = ", ".join([escape(x) for x in data.get("mechanics", [])])
             family = ", ".join([escape(x) for x in data.get("families", [])])
 
-            query = ("INSERT INTO bgg_data "
+            query = ("UPSERT INTO bgg_data "
                      "(game_id, name, image_url, thumb_url, categories, designers, artists, players_min, players_max, playtime_min, playtime_max, mechanics, family) "
                      f"VALUES ({game_id}, '{name}', '{image_url}', '{thumb_url}', '[{categories}]', '[{designers}]', '[{artists}]', {players_min}, {players_max}, {playtime_min}, {playtime_max}, '[{mechanics}]', '[{family}]')")
 
