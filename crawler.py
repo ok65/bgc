@@ -32,13 +32,15 @@ with open(csv_file_path, "r") as fp:
         playtime_min = int(data.get("minplaytime", 0))
         playtime_max = int(data.get("maxplaytime", 0))
         mechanics = json.dumps(data.get("mechanics", []))
-        family = json.dumps(data.get("families", []))
+        fam = data.get("families", [])
+        family = json.dumps(fam)
 
         query = ("INSERT INTO bgg_data "
                  "(game_id, name, image_url, thumb_url, categories, designers, artists, players_min, players_max, playtime_min, playtime_max, mechanics, family) "
-                 f"VALUES ({game_id}, '{name}', '{image_url}', '{thumb_url}', '{categories}', '{designers}', '{artists}', {players_min}, {players_max}, {playtime_min}, {playtime_max}, '{mechanics}', '{family}')")
+                 f"VALUES ({game_id}, {name}, {image_url}, {thumb_url}, {categories}, {designers}, {artists}, {players_min}, {players_max}, {playtime_min}, {playtime_max}, {mechanics}, {family})")
 
         print(query)
+
 
         try:
             with get_db() as db:
@@ -46,7 +48,7 @@ with open(csv_file_path, "r") as fp:
                 cur.execute(query)
                 db.commit()
                 cur.close()
-
+        
         except Exception as error:
             print(" !!!! SQL insert failed")
             print(error)
