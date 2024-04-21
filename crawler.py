@@ -24,6 +24,19 @@ if __name__ == "__main__":
         for row in csv_reader:
             game_id = int(row[0])
 
+            with get_db() as db:
+                cur = db.cursor()
+                cur.execute(f"SELECT (game_id) FROM bgg_data WHERE (game_id={game_id})")
+                result = cur.fetchall()
+                db.commit()
+                cur.close()
+
+            if result:
+                print(f"skipping {game_id}, already in sql db")
+                continue
+
+            pass
+
             data = bgg.game(game_id=game_id).data()
 
             name = escape(data.get("name"))
