@@ -47,8 +47,9 @@ with open(csv_file_path, "r") as fp:
                 db.commit()
                 cur.close()
 
-        except:
+        except Exception as error:
             print(" !!!! SQL insert failed")
+            print(error)
             print("  ")
             continue
 
