@@ -37,7 +37,11 @@ if __name__ == "__main__":
 
             pass
 
-            data = bgg.game(game_id=game_id).data()
+            try:
+                data = bgg.game(game_id=game_id).data()
+            except Exception as error:
+                print(error)
+                continue
 
             name = escape(data.get("name"))
             image_url = escape(data.get("image"))
