@@ -1,9 +1,11 @@
 
-import os
 import mysql.connector
+import json
 
-MYSQL_PW = os.environ["MYSQLPW"]
+with open("secrets.json", "r") as fp:
+    MYSQL_PW = json.load(fp)["MYSQLPW"]
 MYSQL_DB = "ok65$bgc"
+
 
 
 def get_db():

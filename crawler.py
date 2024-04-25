@@ -3,6 +3,7 @@ from boardgamegeek import BGGClient
 import csv
 import json
 from database import get_db
+import time
 
 bgg = BGGClient()
 
@@ -10,9 +11,11 @@ csv_file_path = "boardgames_ranks.csv"
 
 
 def escape(raw_string) -> str:
+    raw_string = "" if raw_string is None else raw_string
     return raw_string.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n').replace('\t', '\\t').replace('\r', '\\r').replace("'", "\\'")
 
 
+session_count = 0
 
 if __name__ == "__main__":
 
@@ -37,15 +40,22 @@ if __name__ == "__main__":
 
             pass
 
+            time.sleep(1)
+
             try:
                 data = bgg.game(game_id=game_id).data()
             except Exception as error:
                 print(error)
                 continue
+             
+            if not isinstance(data, dict):
+                print(f"data bad, skipping game {game_id}")
+                continue 
 
-            name = escape(data.get("name"))
-            image_url = escape(data.get("image"))
-            thumb_url = escape(data.get("thumbnail"))
+            name = escape(data.get("name", ""))
+            print(type(data.get("image", "")))
+            image_url = escape(data.get("image", ""))
+            thumb_url = escape(data.get("thumbnail", ""))
             categories = ", ".join([escape(x) for x in data.get("categories", [])])
             designers = ", ".join([escape(x) for x in data.get("designers", [])])
             artists = ", ".join([escape(x) for x in data.get("artists", [])])
@@ -61,6 +71,10 @@ if __name__ == "__main__":
                      f"VALUES ({game_id}, '{name}', '{image_url}', '{thumb_url}', '[{categories}]', '[{designers}]', '[{artists}]', {players_min}, {players_max}, {playtime_min}, {playtime_max}, '[{mechanics}]', '[{family}]')")
 
             print(query)
+
+            session_count += 1
+
+            print(session_count)
 
 
             try:
