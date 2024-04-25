@@ -13,6 +13,6 @@ class BGC:
                 query = ("SELECT * FROM bgg_data WHERE (name = %s);")
             else:
                 query = ("SELECT * FROM bgg_data WHERE (name LIKE %%s%);")
-            cur.execute(query, name)
+            cur.execute(query, (name))
             return cur.fetchall()
 
