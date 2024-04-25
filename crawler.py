@@ -5,7 +5,7 @@ import json
 from database import get_db
 import time
 
-bgg = BGGClient()
+bgg = BGGClient(requests_per_minute=400)
 
 csv_file_path = "boardgames_ranks.csv"
 
