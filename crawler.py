@@ -47,7 +47,7 @@ if __name__ == "__main__":
                         data = bgg.game(game_id=game_id).data()
 
                     except Exception as error:
-                        time.sleep(1)
+                        time.sleep(2)
 
                     else:
                         break
