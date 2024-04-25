@@ -43,6 +43,7 @@ if __name__ == "__main__":
                 for x in range(3):
 
                     try:
+                        print(f"BGG look attempt {x}")
                         data = bgg.game(game_id=game_id).data()
 
                     except Exception as error:
@@ -51,7 +52,7 @@ if __name__ == "__main__":
                     else:
                         break
 
-                if not isinstance(data):
+                if not isinstance(data, dict):
                     print(f"bad data, skipping game {game_id}")
                     continue
 
