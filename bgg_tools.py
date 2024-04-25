@@ -16,9 +16,6 @@ def bgg_search(name: str, sort_most_likely: bool = True) -> List[Dict]:
     return sorted(r, key=lambda x: x["yearpublished"], reverse=True)
 
 
-
-
-
 if __name__ == "__main__":
 
     import time

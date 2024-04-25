@@ -7,6 +7,11 @@ with open("secrets.json", "r") as fp:
 MYSQL_DB = "ok65$bgc"
 
 
-
-def get_db():
+def get_db() -> mysql.connector.connection_cext.CMySQLConnection:
     return mysql.connector.connect(host="ok65.mysql.pythonanywhere-services.com", user="ok65", password=MYSQL_PW, database=MYSQL_DB)
+
+
+
+if __name__ == "__main__":
+
+    db = get_db()
