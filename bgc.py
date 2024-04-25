@@ -10,9 +10,9 @@ class BGC:
         with get_db() as db:
             cur = db.cursor()
             if exact_match:
-                query = ("SELECT * FROM bgg_data WHERE (name = %s);")
+                query = ("SELECT * FROM bgg_data WHERE (name = '%s');")
             else:
-                query = ("SELECT * FROM bgg_data WHERE (name LIKE %%s%);")
+                query = ("SELECT * FROM bgg_data WHERE (name LIKE '%%s%');")
             cur.execute(query, [name])
             return cur.fetchall()
 
