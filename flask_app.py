@@ -23,8 +23,7 @@ def hello_world():
 @app.route("/search.html", methods=["GET", "POST"])
 def search():
     search_str = request.values.get("search_query")
-    BGC.game_search(search_str)
-    results = bgg_search(search_str) if search_str else []
+    results = BGC.game_search(search_str) if search_str else []
     return render_template("search.html", search_list=results)
 
 
