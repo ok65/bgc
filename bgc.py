@@ -17,7 +17,7 @@ class BGC:
             name = name if exact_match else f"%{name}%"
             query = ("SELECT * FROM bgg_data WHERE (name LIKE %s);")
             cur.execute(query, [escape(name)])
-            return cur.fetchall()
+            return [dict(zip(cur.column_names, row)) for row in cur.fetchall()]
 
     @classmethod
     def user_search(cls, name: str, exact_match=True) -> List:
@@ -26,7 +26,7 @@ class BGC:
             name = name if exact_match else f"%{name}%"
             query = ("SELECT * FROM users WHERE (name LIKE %s);")
             cur.execute(query, [escape(name)])
-            return cur.fetchall()
+            return [dict(zip(cur.column_names, row)) for row in cur.fetchall()]
 
     @classmethod
     def add_player(cls, name) -> Tuple:
@@ -45,6 +45,11 @@ class BGC:
 
         # Return name and user id tuple
         return (user_id, name)
+
+    def _game_dict(self, value_list: List):
+        keys = ["game_id", "name", "image_url", "thumb_url", "categories", "designers",
+                "artists", "players_min", "players_max", "playtime_min", "playtime_max",
+                "mechanics", "family", "year_published", "description"]
 
 
 

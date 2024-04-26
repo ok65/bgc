@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, redirect
 from games_list import GamesList
 from bgg_tools import *
+from bgc import BGC
 
 app = Flask(__name__)
 
@@ -22,6 +23,7 @@ def hello_world():
 @app.route("/search.html", methods=["GET", "POST"])
 def search():
     search_str = request.values.get("search_query")
+    BGC.game_search(search_str)
     results = bgg_search(search_str) if search_str else []
     return render_template("search.html", search_list=results)
 
