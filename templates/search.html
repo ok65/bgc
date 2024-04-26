@@ -26,8 +26,8 @@
 		<div class="fixed-grid">
 	    <div class="grid">
 	      {% for game in search_list %}
-		    <div class="cell"><img src="{{ game['thumbnail_url'] }}"></div>
-	        <div class="cell"><strong>{{ game['name'] }}</strong><p>{{ game['year'] }}</p></div>
+		      <div class="cell"><img src="{{ game['thumb_url'] }}"></div>
+	        <div class="cell"><strong>{{ game['name'] }}</strong><p>{{ game['year_published'] }}</p></div>
 	      {% endfor %}
 	    </div>
 	</div>
