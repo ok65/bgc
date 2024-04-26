@@ -1,7 +1,7 @@
 # A very simple Flask Hello World app for you to get started with...
 
 from flask import Flask, render_template, request, redirect
-from games_list import GamesList
+#from games_list import GamesList
 from bgg_tools import *
 from bgc import BGC
 
@@ -16,8 +16,8 @@ def default():
 def hello_world():
     query = request.values.get("query")
     print(query)
-    gl = GamesList.fetch_with_filter(query) if query else GamesList.fetch_all()
-    return render_template("home.html", games_list=gl)
+    #gl = GamesList.fetch_with_filter(query) if query else GamesList.fetch_all()
+    return render_template("home.html", games_list=[])
 
 
 @app.route("/search.html", methods=["GET", "POST"])
