@@ -87,7 +87,7 @@ if __name__ == "__main__":
                 playtime_max = int(data.get("maxplaytime", 0))
                 mechanics = ", ".join([escape(x) for x in data.get("mechanics", [])])
                 family = ", ".join([escape(x) for x in data.get("families", [])])
-                year_published = data.get("yearpublished ", 0)
+                year_published = data.get("yearpublished", 0)
                 description = escape(data.get("description", ""))
 
                 # Prepare sql insertion query to store the game data
