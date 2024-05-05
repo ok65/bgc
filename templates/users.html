@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Search bar -->
+<div class="container">
+	<form action="/search.html">
+	  <div class="field-body">
+		<div class="label">
+			Search by game name or BGG ID
+		</div>
+	    <div class="field has-addons">
+		  <div class="control is-expanded">
+	        <input class="input" type="text" name="search_query" id="search_query" placeholder="Monopoly">
+	      </div>
+		  <div class="control">
+			  <input class="button" type="submit" value="Search"/>
+		  </div>
+	    </div>
+	  </div>
+	</form>
+</div>
+
+<!-- User list -->
+{% if user_list %}
+<div class="container">
+		<div class="fixed-grid">
+	    <div class="grid">
+	      {% for user in user_list %}
+		    <div class="cell"><strong><a href="users?user_id={{ user['user_id'] }}">{{ user['name'] }}</a></strong></div>
+	      {% endfor %}
+	    </div>
+	</div>
+</div>
+{% endif %}
+
+<!-- Data about specific user -->
+{% if user_data %}
+<div class="container">
+		<div class="fixed-grid">
+	    <div class="grid">
+		    <div class="cell"><strong>Name:</strong>{{ user_data['name'] }}</div>
+		    <div class="cell"><strong>ID:</strong>{{ user_data['user_id'] }}</div>
+				<div class="cell"><strong>Games:</strong>{{ user_data['games_owned'] }}</div>
+		    <div class="cell"><strong>Data:</strong>{{ user_data['data'] }}</div>
+	    </div>
+	</div>
+</div>
+{% endif %}
+
+{% endblock %}
+

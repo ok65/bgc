@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+<!-- User list -->
+
+<div class="container">
+	<form action="/search.html">
+		<div class="field-body">
+			<div class="label">
+				Search by game name or BGG ID
+			</div>
+		  <div class="field has-addons">
+				<div class="control is-expanded">
+		      <input class="input" type="text" name="search_query" id="search_query" placeholder="Monopoly">
+				</div>
+			  <div class="control">
+				  <input class="button" type="submit" value="Search"/>
+			  </div>
+		  </div>
+		</div>
+	</form>
+</div>
+
+
+
+
+{% endblock %}
+

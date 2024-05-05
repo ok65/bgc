@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     import time
 
-    #data = bgg_lookup("Monopoly")
+    data = bgg_id_lookup(106420)
 
     start = time.time()
     results = bgg_search("Heat")

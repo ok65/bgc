@@ -1,4 +1,69 @@
 {% extends "base.html" %}
+
+{% block head %}
+<script>
+	
+	function render_results(results_list){
+		
+		clear_results();
+		
+		results_list.forEach(function(value, index, array){
+			console.log(value["name"]);
+			var html = `<div class='cell'><a href='/game/${value["game_id"]}'><img src='${value["thumb_url"]}'></a></div>\n`;
+			html += `<div class="cell"><strong>${value["name"]}</strong><p>${value["year_published"]}</p></div>`;
+			$("#search_grid").append(html);
+			console.log(html);
+		});
+	}
+	
+	function clear_results(){
+		/* Remove original contents */
+		$("#search_grid").empty();
+	}
+	
+	function ajax_query(query_string){
+		
+		var data = {"search_query": query_string};
+		$.ajax({
+				type: "POST",
+				url: "/json/search",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				dataType: 'json',
+				success: function(result) {
+					console.log("ajax resp");
+					console.log(result);
+					render_results(result);
+				}
+			});
+	}
+	
+	var query_string = "";
+	
+	$( document ).ready(function() {
+    console.log( "ready!" );
+    
+    setInterval(function(){
+        console.log("interval func");
+        if($("#search_query").val() != query_string){
+          query_string = $("#search_query").val();
+          if(query_string.length > 2){
+            ajax_query(query_string);
+          }
+          else{
+            clear_results();
+          }
+        }
+      }, 2000);
+    
+	});
+	
+</script>
+
+
+{% endblock %}
+
+
 {% block content %}
 
 <!-- Search bar -->
@@ -9,30 +74,32 @@
 			Search by game name or BGG ID
 		</div>
 	    <div class="field has-addons">
-		  <div class="control is-expanded">
-	        <input class="input" type="text" name="search_query" id="search_query" placeholder="Monopoly">
-	      </div>
-		  <div class="control">
-			  <input class="button" type="submit" value="Search"/>
-		  </div>
+			  <div class="control is-expanded">
+		        <input class="input" type="text" name="search_query" id="search_query" placeholder="Monopoly">
+		      </div>
+			  <div class="control">
+				  <input class="button" type="submit" value="Search"/>
+			  </div>
 	    </div>
 	  </div>
+		<input id="ajaxbutton" class="button" value="Ajax"/>
 	</form>
 </div>
 
+
+
 <!-- Search results -->
-{% if search_list %}
 <div class="container">
-		<div class="fixed-grid">
-	    <div class="grid">
-	      {% for game in search_list %}
-		      <div class="cell"><img src="{{ game['thumb_url'] }}"></div>
-	        <div class="cell"><strong>{{ game['name'] }}</strong><p>{{ game['year_published'] }}</p></div>
-	      {% endfor %}
-	    </div>
+	<div class="fixed-grid">
+	  <div id="search_grid" class="grid">
+	    {% for game in search_list %}
+		    <div class="cell"><img src="{{ game['thumb_url'] }}"></div>
+	      <div class="cell"><strong>{{ game['name'] }}</strong><p>{{ game['year_published'] }}</p></div>
+	    {% endfor %}
+	  </div>
 	</div>
 </div>
-{% endif %}
+
 
 {% endblock %}
 

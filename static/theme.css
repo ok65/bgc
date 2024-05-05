@@ -4,3 +4,8 @@
   --bulma-primary: red;
   --bulma-body-background-color: #3C3C3C;
 }
+
+@font-face {
+  font-family: 'Comic Sans MS';
+  src: url("comicr.ttf");
+}

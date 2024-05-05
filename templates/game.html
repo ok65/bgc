@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+	
+	$( document ).ready(function() {
+    console.log( "ready!" );
+    
+	});
+	
+</script>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Search bar -->
+
+
+
+
+<!-- Game data -->
+<div class="container">
+	<div class="fixed-grid has-1-cols">
+	  <div id="search_grid" class="grid">
+		    <div class="cell"><img src="{{ game_data['image_url'] }}"></div>
+	      <div class="cell"><h3 class="title is-3">{{ game_data['name'] }} ({{ game_data['year_published'] }})</h3></div>
+		    <div class="cell"><b>Game Designers</b><p>{{ game_data['designers']|join(', ') }}</p></div>
+		    <div class="cell"><b>Game Mechanics</b><p>{{ game_data['mechanics']|join(', ') }}</p></div>
+	  </div>
+	</div>
+</div>
+
+
+{% endblock %}
+

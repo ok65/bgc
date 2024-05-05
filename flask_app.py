@@ -1,9 +1,8 @@
 # A very simple Flask Hello World app for you to get started with...
 
-from flask import Flask, render_template, request, redirect
-#from games_list import GamesList
-from bgg_tools import *
-from bgc import BGC
+from flask import Flask, render_template, request, redirect, jsonify
+from games import Games
+from users import Users
 
 app = Flask(__name__)
 
@@ -12,7 +11,7 @@ app = Flask(__name__)
 def default():
     return redirect("/home.html")
 
-@app.route('/home.html', methods=["GET", "POST"])
+@app.route('/home', methods=["GET", "POST"])
 def hello_world():
     query = request.values.get("query")
     print(query)
@@ -20,11 +19,39 @@ def hello_world():
     return render_template("home.html", games_list=[])
 
 
-@app.route("/search.html", methods=["GET", "POST"])
+@app.route("/search", methods=["GET", "POST"])
 def search():
     search_str = request.values.get("search_query")
-    results = BGC.game_search(search_str) if search_str else []
+    results = Games.search(search_str) if search_str else []
     return render_template("search.html", search_list=results)
+
+
+@app.route("/json/search", methods=["GET", "POST"])
+def json_search():
+    search_str = request.get_json()["search_query"]
+    results = Games.search(search_str) if search_str else []
+    return jsonify(results)
+
+
+@app.route("/game/<game_id>", methods=["GET", "POST"])
+def game(game_id):
+    game_data = Games.lookup(game_id)
+    return render_template("game.html", game_data=game_data)
+
+
+@app.route("/users", methods=["GET", "POST"])
+def users_all():
+    user_id = request.values.get("user_id")
+    if user_id:
+        return render_template("users.html", user_list=None, user_data=Users.lookup(user_id))
+    else:
+        return render_template("users.html", user_list=Users.list(), user_data=None)
+
+
+@app.route("/match")
+def match():
+    return render_template("match.html")
+
 
 
 if __name__ == "__main__":

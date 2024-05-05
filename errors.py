@@ -1,0 +1,3 @@
+
+
+class NameAlreadyInUseError(Exception): pass

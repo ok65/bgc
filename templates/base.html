@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello BCG!</title>
-    <link rel="stylesheet" href="static/bulma.min.css">
-	  <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bulma.min.css') }}">
+	  <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% block head %}
+	  {% endblock %}
   </head>
   <body>
     <div class="container header has-text-centered is-max-desktop">
-	    <img src="static/bgclogo.png"/>
+	    <img src="{{ url_for('static', filename='bgclogo.png') }}"/>
     </div>
   <div class="container notification is-max-desktop">
 	  {% block content %}
