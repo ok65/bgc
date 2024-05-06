@@ -22,12 +22,21 @@
 
 
 <!-- Game data -->
+<div class="block">
+	<button class="button">Club Game List</button>
+	<button class="button">Search Games</button>
+	<button class="button">Player Stats</button>
+</div>
 <div class="container">
 	<div class="fixed-grid has-1-cols">
 	  <div id="search_grid" class="grid">
-		    <div class="cell"><img src="{{ game_data['image_url'] }}"></div>
-	      <div class="cell"><h3 class="title is-3">{{ game_data['name'] }} ({{ game_data['year_published'] }})</h3></div>
-		    <div class="cell"><b>Game Designers</b><p>{{ game_data['designers']|join(', ') }}</p></div>
+		    <div class="cell"><img style="max-height:200px" src="{{ game_data['image_url'] }}"></div>
+	        <div class="cell"><h3 class="title is-3">{{ game_data['name'] }} ({{ game_data['year_published'] }})</h3></div>
+		    <div class="cell">
+				<button class="button is-primary">Played it!</button>
+				<button class="button is-primary">Own it!</button>
+			</div>
+			<div class="cell"><b>Game Designers</b><p>{{ game_data['designers']|join(', ') }}</p></div>
 		    <div class="cell"><b>Game Mechanics</b><p>{{ game_data['mechanics']|join(', ') }}</p></div>
 	  </div>
 	</div>

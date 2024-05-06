@@ -15,7 +15,11 @@
 			console.log(html);
 		});
 	}
-	
+
+	function add_loading(){
+		$("#search_grid").append("<div class='cell'>Loading results...</div>");
+	}
+
 	function clear_results(){
 		/* Remove original contents */
 		$("#search_grid").empty();
@@ -70,19 +74,21 @@
 <div class="container">
 	<form action="/search.html">
 	  <div class="field-body">
-		<div class="label">
-			Search by game name or BGG ID
+		<div class="xlabel">
+			Start typing a game name...
+			<span class="icon">
+			  <i class="fas fa-spinner fa-pulse"></i>
+			</span>
 		</div>
-	    <div class="field has-addons">
-			  <div class="control is-expanded">
-		        <input class="input" type="text" name="search_query" id="search_query" placeholder="Monopoly">
-		      </div>
-			  <div class="control">
-				  <input class="button" type="submit" value="Search"/>
-			  </div>
+	    <div class="field">
+		  <div class="control is-expanded">
+			<input class="input" type="text" name="search_query" id="search_query" placeholder="Monopoly">
+		  </div>
+		  <div class="control">
+
+		  </div>
 	    </div>
 	  </div>
-		<input id="ajaxbutton" class="button" value="Ajax"/>
 	</form>
 </div>
 
