@@ -36,3 +36,8 @@ def make_query(query) -> str:
         return query
     else:
         return query.replace("%s", "?")
+
+
+def get_timeformat() -> str:
+    return '%Y-%m-%d %H:%M:%S'
+
