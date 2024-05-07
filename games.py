@@ -1,4 +1,3 @@
-
 # Library imports
 from typing import List, Dict, Iterable
 
@@ -10,17 +9,22 @@ from util import escape
 class Games:
 
     @classmethod
-    def search(cls, name: str, exact_match=False) -> List[Dict]:
+    def search(cls, name: str, exact_match=False, sort_recent: bool = True, limit: int = -1) -> List[Dict]:
         """
         Search for a game by its title, and return a list of possible matches as dicts of data,
-        :param name: String to match to
+        :param limit: (int) Max number of results to return, default of -1 means no limit
+        :param sort_recent: (bool) Default true, will return more recently published games first
+        :param name: (str) Name to match to, partial or full
         :param exact_match: bool, if false it will find partial matches - if true an exact match only
         :return: List of dicts
         """
         with get_db() as db:
             cur = db.cursor()
             name = name if exact_match else f"%{name}%"
-            query = make_query("SELECT * FROM bgg_data WHERE (name LIKE %s);")
+            q = "SELECT * FROM bgg_data WHERE (name LIKE %s)"
+            if sort_recent:
+                q += " ORDER BY year_published DESC"
+            query = make_query(f"{q} LIMIT {int(limit)};")
             cur.execute(query, [escape(name)])
             return [cls._game_dict(row) for row in cur.fetchall()]
 
@@ -54,10 +58,8 @@ class Games:
 
 
 if __name__ == "__main__":
-
-    r = Games.search("Monopoly")
+    r = Games.search("Monopoly", limit=10)
 
     r = Games.lookup(164840)
-
 
     pass
