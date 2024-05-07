@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def default():
-    return redirect("/home.html")
+    return redirect("/home")
 
 @app.route('/home', methods=["GET", "POST"])
 def hello_world():
@@ -29,7 +29,8 @@ def search():
 @app.route("/json/search", methods=["GET", "POST"])
 def json_search():
     search_str = request.get_json()["search_query"]
-    results = Games.search(search_str) if search_str else []
+    limit = request.get_json().get("limit", 10)
+    results = Games.search(search_str, limit=limit) if search_str else []
     return jsonify(results)
 
 
