@@ -26,11 +26,18 @@ def search():
     return render_template("search.html", search_list=results)
 
 
-@app.route("/json/search", methods=["GET", "POST"])
-def json_search():
+@app.route("/json/game_search", methods=["GET", "POST"])
+def json_game_search():
     search_str = request.get_json()["search_query"]
     limit = request.get_json().get("limit", 10)
     results = Games.search(search_str, limit=limit) if search_str else []
+    return jsonify(results)
+
+@app.route("/json/user_search", methods=["GET", "POST"])
+def json_user_search():
+    search_str = request.get_json()["search_query"]
+    limit = request.get_json().get("limit", 10)
+    results = Users.search(search_str, limit=limit) if search_str else []
     return jsonify(results)
 
 

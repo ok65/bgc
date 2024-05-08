@@ -12,21 +12,20 @@ from util import escape, new_id
 class Users:
 
     @classmethod
-    def search(cls, name: str, exact_match=False) -> Optional[Dict]:
+    def search(cls, name: str, exact_match=False, limit: int = -1) -> List[Dict]:
         """
-        Searches the user database for the name specified, and returns a dict with user date
-        :param name:
-        :param exact_match:
-        :return: Dict of user data
+        Searches the user database for the name specified, and returns matching results
+        :param name: (str) Name (or partial name) to search for
+        :param exact_match: (bool) Do not match with partials
+        :param limit: (int) max number of results to return (default of -1 means no limit)
+        :return: List of dict of user data
         """
         with get_db() as db:
             cur = db.cursor()
             name = name if exact_match else f"%{name}%"
-            query = make_query("SELECT * FROM users WHERE (name LIKE %s);")
-            cur.execute(query, [escape(name)])
-            user = cur.fetchone()
-        if user:
-            return cls._user_dict(user)
+            query = make_query("SELECT * FROM users WHERE (name LIKE %s) LIMIT %s;")
+            cur.execute(query, [escape(name), int(limit)])
+            return [cls._user_dict(row) for row in cur.fetchall()]
 
     @classmethod
     def lookup(cls, user_id: int) -> Dict:
