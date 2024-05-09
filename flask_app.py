@@ -33,6 +33,7 @@ def json_game_search():
     results = Games.search(search_str, limit=limit) if search_str else []
     return jsonify(results)
 
+
 @app.route("/json/user_search", methods=["GET", "POST"])
 def json_user_search():
     search_str = request.get_json()["search_query"]

@@ -16,7 +16,26 @@
           console.log("Nav click");
           $(".navbar-dropdown").toggle("slow");
         });
+        
+        /* Bind buttons */
+			  $("#button-own-it").on("click", function(){
+			    $("#modal-own-it").addClass("is-active");
+			  });
+			  $("#button-play-it").on("click", function(){
+			    $("#modal-play-it").addClass("is-active");
+			  });
+			  $(".modal-close").on("click", modalCloseHandler);
+			  
       });
+	    
+	    function modalCloseHandler(event)
+	    {
+	      console.log("close handler");
+	      var parent = $(event.target).parents(".modal:first");
+	      parent.removeClass(".is-active");
+	      $(this).parents(".modal").first().removeClass("is-active");
+	    }
+	    
     </script>
     
 
@@ -57,33 +76,34 @@
   </div>
 </nav>
 
-  <div class="container notification is-max-desktop">
-		stuff
-  </div>
-  
-  <div class="modal is-active">
+<div class="container notification is-max-desktop">
+	<button id="button-own-it" class="button">Own it</button>
+	<button id="button-play-it" class="button">Played it</button>
+</div>
+
+<!-- Modal I own that game -->
+<div id="modal-own-it" class="modal">
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">I Own That Game!</p>
-      <button class="delete" aria-label="close"></button>
+      <button class="delete modal-close" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
 	    <form action="/search.html">
-	  <div class="field-body">
-		<div class="xlabel">
-			Who?
-		</div>
-	    <div class="field">
-		  <div class="control is-expanded">
-			<input class="input" type="text" name="search_query" id="search_query" placeholder="Reiner Knizia">
-		  </div>
-		  <div class="control">
-
-		  </div>
-	    </div>
-	  </div>
-	</form>
+			  <div class="field-body">
+					<div class="xlabel">
+						Who?
+					</div>
+			    <div class="field">
+					  <div class="control is-expanded">
+							<input class="input" type="text" name="search_query" id="search_query" placeholder="Reiner Knizia">
+					  </div>
+					  <div class="control">
+					  </div>
+			    </div>
+			  </div>
+			</form>
     </section>
     <footer class="modal-card-foot">
       <div class="buttons">
@@ -93,6 +113,42 @@
     </footer>
   </div>
 </div>
+
+
+<!-- Modal I played that game -->
+<div id="modal-play-it" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">I Played That Game!</p>
+      <button class="delete modal-close" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+	    <form action="/search.html">
+			  <div class="field-body">
+					<div class="xlabel">
+						Who?
+					</div>
+			    <div class="field">
+					  <div class="control is-expanded">
+							<input class="input" type="text" name="search_query" id="user_search_query" placeholder="Reiner Knizia">
+					  </div>
+					  <div class="control">
+					  </div>
+			    </div>
+			  </div>
+			</form>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button class="button is-success">Save changes</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
   
-  </body>
+
+  
+</body>
 </html>
