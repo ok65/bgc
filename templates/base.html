@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello BCG!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='bulma.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+		<link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
+	  <link rel="stylesheet" href="{{ url_for('static', filename='dataList.css') }}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
+    <script src="{{ url_for('static', filename='dataList.js') }}"></script>
+	  <script>
       $(document).ready(function(){
         $(".navbar-dropdown").hide();
         console.log("nav ready");
@@ -25,37 +27,35 @@
 	{% endblock %}
   </head>
   <body>
-
+  
+  <!-- Navigation Bar -->
   <nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a style="margin: 5px 0px 0px 30px" href="/home">
-      <img style="max-width: 240px" src="{{ url_for('static', filename='bgclogo_alpha.png') }}"/>
-    </a>
-
-    <a role="button" id="nav-burger" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-item has-dropdown is-hoverable">
-    <div class="navbar-dropdown">
-      <a class="navbar-item">
-        CLUB GAME LIST
-      </a>
-      <a class="navbar-item" href="/search">
-        GAME SEARCH
-      </a>
-      <a class="navbar-item">
-        RANKINGS
-      </a>
-      <div class="navbar-item">
-        WHO'S BAD?
-      </div>
-    </div>
-  </div>
-</nav>
+	  <div class="navbar-brand">
+	    <a style="margin: 5px 0px 0px 30px" href="/home">
+	      <img style="max-width: 240px" src="{{ url_for('static', filename='bgclogo_alpha.png') }}"/>
+	    </a>
+			<a class="navbar-burger" style="margin-top: 18px" id="nav-burger">
+				<i class="fa-solid fa-bars navbar-burger"></i>
+			</a>
+	  </div>
+	  
+	  <div class="navbar-item has-dropdown is-hoverable">
+	    <div class="navbar-dropdown">
+	      <a class="navbar-item">
+	        CLUB GAME LIST
+	      </a>
+	      <a class="navbar-item" href="/search">
+	        GAME SEARCH
+	      </a>
+	      <a class="navbar-item">
+	        RANKINGS
+	      </a>
+	      <div class="navbar-item">
+	        WHO'S BAD?
+	      </div>
+	    </div>
+	  </div>
+	</nav>
 
   <div class="container notification is-max-desktop">
 	  {% block content %}

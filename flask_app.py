@@ -11,11 +11,10 @@ app = Flask(__name__)
 def default():
     return redirect("/home")
 
+
 @app.route('/home', methods=["GET", "POST"])
 def hello_world():
     query = request.values.get("query")
-    print(query)
-    #gl = GamesList.fetch_with_filter(query) if query else GamesList.fetch_all()
     return render_template("home.html", games_list=[])
 
 
@@ -42,10 +41,19 @@ def json_user_search():
     return jsonify(results)
 
 
+@app.route("/json/ownership_register", methods=["GET", "POST"])
+def json_ownership_register():
+    owner_name = request.get_json()["owner_name"]
+    game_id = request.get_json()["game_id"]
+    Users.register_game_ownership(owner_name, game_id=game_id)
+    return jsonify({"operation": "success"})
+
+
 @app.route("/game/<game_id>", methods=["GET", "POST"])
 def game(game_id):
     game_data = Games.lookup(game_id)
-    return render_template("game.html", game_data=game_data)
+    owner_list = Users.own_this_game(game_id)
+    return render_template("game.html", game_data=game_data, owner_list=owner_list)
 
 
 @app.route("/users", methods=["GET", "POST"])

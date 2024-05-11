@@ -1,12 +1,12 @@
 
 # Library imports
-from typing import Optional, Tuple, List, Iterable, Dict
+from typing import Union, Tuple, List, Iterable, Dict
 import json
 
 # Project imports
 from errors import NameAlreadyInUseError
 from database import get_db, make_query
-from util import escape, new_id
+from util import escape, new_id, pickle_list, unpickle_list
 
 
 class Users:
@@ -77,6 +77,67 @@ class Users:
             return [cls._user_dict(row) for row in cur.fetchall()]
 
     @classmethod
+    def register_game_ownership(cls, user_name_or_id: Union[str, int], game_id: int):
+        """
+        Adds the game id to the user's list of owned games. Duplicate entries are ignored
+        :param user_name_or_id: (str or int) Pass the users exact name or user id
+        :param game_id: (int) Specify the games id
+        :return: None
+        """
+        user_id = user_name_or_id if isinstance(user_name_or_id, int) \
+            else cls.search(user_name_or_id, exact_match=True)[0]["user_id"]
+
+        games_list = cls.lookup(user_id)["games_owned"]
+        games_list.append(game_id)
+
+        with get_db() as db:
+            cur = db.cursor()
+            query = make_query(f"UPDATE users SET games_owned = '{pickle_list(set(games_list))}' WHERE user_id = %s;")
+            cur.execute(query, [user_id])
+
+    @classmethod
+    def own_this_game(cls, game_id: int) -> List:
+        """
+        Fetch a list of user names that own a particular game
+        :param game_id: (int) game id to check ownership of
+        :return: List of user names
+        """
+        # Get a list of users (ignore users who don't own any games)
+        with get_db() as db:
+            cur = db.cursor()
+            query = make_query(f"SELECT * FROM users WHERE games_owned IS NOT NULL;")
+            cur.execute(query)
+            user_list = [cls._user_dict(row) for row in cur.fetchall()]
+
+        # Iterate through user list, and add to owners list if game id is in their owned games list
+        owners_list = []
+        game_id = int(game_id)
+        for user in user_list:
+            if game_id in user["games_owned"]:
+                owners_list.append(user["name"])
+
+        # Return the owners list
+        owners_list.sort()
+        return owners_list
+
+    @classmethod
+    def fetch_all_owned_games(cls) -> List:
+        # Get a list of users (ignore users who don't own any games)
+        with get_db() as db:
+            cur = db.cursor()
+            query = make_query(f"SELECT * FROM users WHERE games_owned IS NOT NULL;")
+            cur.execute(query)
+            user_list = [cls._user_dict(row) for row in cur.fetchall()]
+
+        games_set = set()
+
+        for user in user_list:
+            for game in user["games_owned"]:
+                games_set.add(int(game))
+
+        return list(games_set)
+
+    @classmethod
     def _user_dict(cls, value_list: Iterable) -> Dict:
         keys = ["user_id", "name", "games_owned", "data"]
         d = dict(zip(keys, value_list))
@@ -84,9 +145,12 @@ class Users:
         d["data"] = json.loads(d["data"]) if d["data"] else []
         return d
 
+
 if __name__ == "__main__":
 
-    r = Users.search("werter")
+
+
+    games = Users.fetch_all_owned_games()
 
 
     pass

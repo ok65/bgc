@@ -24,7 +24,7 @@
 			  $("#button-play-it").on("click", function(){
 			    $("#modal-play-it").addClass("is-active");
 			  });
-			  $(".modal-close").on("click", modalCloseHandler);
+			  $(".close").on("click", modalCloseHandler);
 			  
       });
 	    
@@ -83,11 +83,11 @@
 
 <!-- Modal I own that game -->
 <div id="modal-own-it" class="modal">
-  <div class="modal-background"></div>
+  <div class="modal-background close"></div>
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">I Own That Game!</p>
-      <button class="delete modal-close" aria-label="close"></button>
+      <button class="delete close" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
 	    <form action="/search.html">
@@ -107,8 +107,7 @@
     </section>
     <footer class="modal-card-foot">
       <div class="buttons">
-        <button class="button is-success">Save changes</button>
-        <button class="button">Cancel</button>
+        <button class="button is-success">Save</button>
       </div>
     </footer>
   </div>
@@ -117,11 +116,11 @@
 
 <!-- Modal I played that game -->
 <div id="modal-play-it" class="modal">
-  <div class="modal-background"></div>
+  <div class="modal-background close"></div>
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">I Played That Game!</p>
-      <button class="delete modal-close" aria-label="close"></button>
+      <button class="delete close" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
 	    <form action="/search.html">
@@ -141,7 +140,7 @@
     </section>
     <footer class="modal-card-foot">
       <div class="buttons">
-        <button class="button is-success">Save changes</button>
+        <button class="button is-success">Save</button>
       </div>
     </footer>
   </div>

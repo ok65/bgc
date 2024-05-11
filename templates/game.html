@@ -3,11 +3,102 @@
 {% block head %}
 <script>
 	
+	var user_search_string = "";
+	
 	$( document ).ready(function() {
     console.log( "ready!" );
     
+    /* Bind buttons */
+	  $("#button-own").on("click", function(){
+	    $("#modal-own-it").addClass("is-active");
+	  });
+	  $("#button-play").on("click", function(){
+	    $("#modal-play-it").addClass("is-active");
+	  });
+	  $(".close").on("click", modalCloseHandler);
+	  $("#button-own-submit").on("click", ajax_ownership_register);
+	  
+	  
+	  /* Interval function */
+	  setInterval(function(){
+      console.log("interval func");
+      if($("#user_search").val() != user_search_string){
+        user_search_string = $("#user_search").val();
+        if(user_search_string.length > 2){
+          ajax_user_query(user_search_string);
+        }
+        else{
+          
+        }
+      }
+    }, 2000);
+    
 	});
 	
+	function modalCloseHandler(event)
+  {
+    console.log("close handler");
+    var parent = $(event.target).parents(".modal:first");
+    parent.removeClass(".is-active");
+    $(this).parents(".modal").first().removeClass("is-active");
+  }
+  
+  function closeAllModals()
+  {
+    $(".modal").removeClass("is-active");
+  }
+  
+  function ajax_user_query(user_search)
+  {
+		var data = {"search_query": user_search};
+		$.ajax({
+				type: "POST",
+				url: "/json/user_search",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				dataType: 'json',
+				success: function(result) {
+					console.log("ajax resp");
+					console.log(result);
+					user_datalist(result);
+				}
+			});
+			console.log("ajax sent");
+	}
+	
+	function ajax_ownership_register()
+  {
+		var data = {"owner_name": $("#user_search").val(),
+								"game_id": {{ game_data["game_id"] }} };
+		$.ajax({
+				type: "POST",
+				url: "/json/ownership_register",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				dataType: 'json',
+				success: function(result) {
+					console.log("Game ownership registered");
+					location.reload();
+				}
+			});
+			console.log("ajax sent");
+			console.log(data);
+	}
+
+	function user_datalist(user_list)
+	{
+		var html = "";
+		
+		
+		user_list.forEach(function(value, index, array){
+			html += `<option value="${value['name']}"></option>\n`;
+		});
+		
+		console.log(html);
+		$("#users").empty();
+		$("#users").append(html);
+	}
+
 </script>
 
 
@@ -16,31 +107,92 @@
 
 {% block content %}
 
-<!-- Search bar -->
 
-
-
-
-<!-- Game data -->
-<div class="block">
-	<button class="button">Club Game List</button>
-	<button class="button">Search Games</button>
-	<button class="button">Player Stats</button>
-</div>
+<!-- Game Data -->
 <div class="container">
 	<div class="fixed-grid has-1-cols">
 	  <div id="search_grid" class="grid">
 		    <div class="cell"><img style="max-height:200px" src="{{ game_data['image_url'] }}"></div>
 	        <div class="cell"><h3 class="title is-3">{{ game_data['name'] }} ({{ game_data['year_published'] }})</h3></div>
 		    <div class="cell">
-				<button class="button is-primary">Played it!</button>
-				<button class="button is-primary">Own it!</button>
+				<button id="button-play" class="button is-primary">Played it!</button>
+				<button id="button-own" class="button is-primary">Own it!</button>
 			</div>
+		  <div class="cell"><b>Owners</b><p>{{ owner_list|join(', ') }}</p></div>
 			<div class="cell"><b>Game Designers</b><p>{{ game_data['designers']|join(', ') }}</p></div>
 		    <div class="cell"><b>Game Mechanics</b><p>{{ game_data['mechanics']|join(', ') }}</p></div>
 	  </div>
 	</div>
 </div>
+
+
+<!-- Modal I own that game -->
+<div id="modal-own-it" class="modal">
+  <div class="modal-background close"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">I Own That Game!</p>
+      <button class="delete close" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+	    <form action="/search.html">
+			  <div class="field-body">
+					<div class="xlabel">
+						Who?
+					</div>
+			    <div class="field">
+					  <div class="control is-expanded">
+							<input class="input" type="text" list="users" name="user_search" id="user_search" placeholder="Reiner Knizia">
+						  <datalist id="users">
+						  </datalist>
+					  </div>
+					  <div class="control">
+					  </div>
+			    </div>
+			  </div>
+			</form>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button id="button-own-submit" class="button is-success">Submit</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+
+<!-- Modal I played that game -->
+<div id="modal-play-it" class="modal">
+  <div class="modal-background close"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">I Played That Game!</p>
+      <button class="delete close" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+	    <form action="/search.html">
+			  <div class="field-body">
+					<div class="xlabel">
+						Who?
+					</div>
+			    <div class="field">
+					  <div class="control is-expanded">
+							
+					  </div>
+					  <div class="control">
+					  </div>
+			    </div>
+			  </div>
+			</form>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button class="button is-success">Save</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
 
 
 {% endblock %}

@@ -9,24 +9,29 @@ from util import escape
 class Games:
 
     @classmethod
-    def search(cls, name: str, exact_match=False, sort_recent: bool = True, limit: int = -1) -> List[Dict]:
+    def search(cls, name: str, exact_match=False, sort_similarity: bool = True, limit: int = -1) -> List[Dict]:
         """
         Search for a game by its title, and return a list of possible matches as dicts of data,
         :param limit: (int) Max number of results to return, default of -1 means no limit
-        :param sort_recent: (bool) Default true, will return more recently published games first
+        :param sort_similarity: (bool) Default true, will return more matches with better similarity score
         :param name: (str) Name to match to, partial or full
         :param exact_match: bool, if false it will find partial matches - if true an exact match only
         :return: List of dicts
         """
+        from difflib import SequenceMatcher
+
+        def similarity(a):
+            return SequenceMatcher(None, name, a).ratio()
+
         with get_db() as db:
             cur = db.cursor()
             name = name if exact_match else f"%{name}%"
-            q = "SELECT * FROM bgg_data WHERE (name LIKE %s)"
-            if sort_recent:
-                q += " ORDER BY year_published DESC"
+            q = "SELECT * FROM bgg_data WHERE (name LIKE %s) ORDER BY year_published DESC"
             query = make_query(f"{q} LIMIT {int(limit)};")
             cur.execute(query, [escape(name)])
-            return [cls._game_dict(row) for row in cur.fetchall()]
+            games = [cls._game_dict(row) for row in cur.fetchall()]
+            games.sort(key=lambda x: similarity(x["name"]), reverse=True)
+            return games
 
     @classmethod
     def lookup(cls, game_id: int) -> Dict:
