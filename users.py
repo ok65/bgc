@@ -97,7 +97,7 @@ class Users:
             cur.execute(query, [user_id])
 
         if user_id not in cls.own_this_game(game_id):
-            raise Exception("Update operation not successful")
+            raise Exception(f"Update operation not successful, query: {query}")
 
     @classmethod
     def own_this_game(cls, game_id: int) -> List:
