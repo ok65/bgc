@@ -96,6 +96,9 @@ class Users:
             query = make_query(f"UPDATE users SET games_owned = '{pickle_list(set(games_list))}' WHERE user_id = %s;")
             cur.execute(query, [user_id])
 
+        if user_id not in cls.own_this_game(game_id):
+            raise Exception("Update operation not successful")
+
     @classmethod
     def own_this_game(cls, game_id: int) -> List:
         """
