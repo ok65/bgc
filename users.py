@@ -23,7 +23,9 @@ class Users:
         with get_db() as db:
             cur = db.cursor()
             name = name if exact_match else f"%{name}%"
-            query = make_query("SELECT * FROM users WHERE (name LIKE %s) LIMIT %s;")
+            q = "SELECT * FROM users WHERE (name LIKE %s)"
+            q = f"{q};" if limit < 0 else f"{q} LIMIT {limit};"
+            query = make_query(q)
             cur.execute(query, [escape(name), int(limit)])
             return [cls._user_dict(row) for row in cur.fetchall()]
 

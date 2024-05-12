@@ -25,6 +25,7 @@ if __name__ == "__main__":
 
         try:
             # Open the bgg ranked game csv file (ro)
+            print("opening board_games.csv")
             with open(csv_file_path, "r") as fp:
 
                 # Parse csv

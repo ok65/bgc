@@ -96,7 +96,12 @@
 <div class="container">
 	<div class="fixed-grid">
 	  <div id="search_grid" class="grid">
-
+			{% for game in game_list %}
+		  
+		  <div class='cell'><a href='/game/{{game["game_id"]}}'><img src='{{game["thumb_url"]}}'></a></div>
+			<div class="cell"><strong>{{game["name"]}}</strong><p>{{game["year_published"]}}</p></div>
+		  
+		  {% endfor %}
 	  </div>
 	</div>
 </div>

@@ -65,6 +65,13 @@ def users_all():
         return render_template("users.html", user_list=Users.list(), user_data=None)
 
 
+@app.route("/listing")
+def listing():
+    game_id_list = Users.fetch_all_owned_games()
+    game_list = Games.list_lookup(game_id_list)
+    return render_template("listing.html", game_list=game_list)
+
+
 @app.route("/match")
 def match():
     return render_template("match.html")

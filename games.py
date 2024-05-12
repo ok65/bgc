@@ -27,7 +27,8 @@ class Games:
             cur = db.cursor()
             name = name if exact_match else f"%{name}%"
             q = "SELECT * FROM bgg_data WHERE (name LIKE %s) ORDER BY year_published DESC"
-            query = make_query(f"{q} LIMIT {int(limit)};")
+            q = f"{q};" if limit < 0 else f"{q} LIMIT {limit};"
+            query = make_query(q)
             cur.execute(query, [escape(name)])
             games = [cls._game_dict(row) for row in cur.fetchall()]
             games.sort(key=lambda x: similarity(x["name"]), reverse=True)
@@ -45,6 +46,21 @@ class Games:
             query = make_query("SELECT * FROM bgg_data WHERE (game_id = %s);")
             cur.execute(query, [int(game_id)])
             return cls._game_dict(cur.fetchone())
+
+    @classmethod
+    def list_lookup(cls, game_id_list: List) -> List[Dict]:
+        """
+        Lookup a list of game ids and return a list of dicts containing all their data.
+        Uses a single sql statement, so more efficient that repeated lookups
+        :param game_id_list: List of (int) ids
+        :return: List of dicts
+        """
+        with get_db() as db:
+            cur = db.cursor()
+            flat_list = ", ".join([f"'{x}'" for x in game_id_list])
+            query = make_query(f"SELECT * FROM bgg_data WHERE game_id IN ({flat_list});")
+            cur.execute(query)
+            return [cls._game_dict(row) for row in cur.fetchall()]
 
     @classmethod
     def _game_dict(cls, value_list: Iterable) -> Dict:
