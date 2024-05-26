@@ -95,6 +95,7 @@ class Users:
             cur = db.cursor()
             query = make_query(f"UPDATE users SET games_owned = '{pickle_list(set(games_list))}' WHERE user_id = %s;")
             cur.execute(query, [user_id])
+            db.autocommit
             rc = cur.rowcount
 
         if user_id not in cls.own_this_game(game_id):

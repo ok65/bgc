@@ -14,14 +14,16 @@ with open("secrets.json", "r") as fp:
 MYSQL_DB = "ok65$bgc"
 
 
-def get_db() -> MySQLConnectionAbstract | sqlite3.Connection:
+def get_db(autocommit=True) -> MySQLConnectionAbstract | sqlite3.Connection:
     """
     Convience function to connect to the database and return a connection object. Returns mysql connection when deployed
     to the server, and a local sqlite3 connection when not.
     :return: mysql/sqlite3 Connection Object
     """
     if SERVER_DEPLOYED:
-        return mysql.connector.connect(host="ok65.mysql.pythonanywhere-services.com", user="ok65", password=MYSQL_PW, database=MYSQL_DB)
+        db = mysql.connector.connect(host="ok65.mysql.pythonanywhere-services.com", user="ok65", password=MYSQL_PW, database=MYSQL_DB)
+        db.autocommit = autocommit
+        return db
     else:
         return sqlite3.connect("dummy_sql.db")
 
