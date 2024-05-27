@@ -59,7 +59,7 @@ class Match:
         md["players"] = unpickle_list(md["players"])
         md["data"] = unpickle_dict(md["data"])
         md["scores"] = [int(x) for x in unpickle_list(md["scores"])] if md["scores"] else None
-        if md["datetime"] is not datetime:
+        if not isinstance(md["datetime"], datetime):
             md["datetime"] = datetime.strptime(md["datetime"], get_timeformat())
         return md
 
