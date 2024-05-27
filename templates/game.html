@@ -17,7 +17,11 @@
 	  });
 	  $(".close").on("click", modalCloseHandler);
 	  $("#button-own-submit").on("click", ajax_ownership_register);
+	  $("#add_player_line").on("click", add_user_play_entry);
+	  $("#played_save_button").on("click", ajax_played_register);
 	  
+	  /* Add first line in "I Played That Game!" dialog */
+	  add_user_play_entry();
 	  
 	  /* Interval function */
 	  setInterval(function(){
@@ -64,6 +68,53 @@
 				}
 			});
 			console.log("ajax sent");
+	}
+	
+	function add_user_play_entry()
+	{
+		var html = '<tr class="played_dataset">';
+		html +=    '<td><input class="input played_user_name" type="text" list="users" name="user_search" placeholder="Reiner Knizia"></td>';
+		html +=    '<td><input class="input played_score" type="number"></td>';
+	  html +=    '<td><label class="checkbox"><input class="played_bad" type="checkbox"></label></td>';
+		html +=    '</tr>';
+		$("#user_play_table").append(html);
+	}
+	
+	function ajax_played_register()
+	{
+	
+		var data = {};
+		data["game_id"] = {{ game_data["game_id"] }};
+		data["players"] = [];
+		data["scores"] = [];
+		data["score_type"] = $("#played_score_type").val();
+		data["bad"] = null;
+	
+		$(".played_dataset").each(function(){
+			data["players"].push($(this).find(".played_user_name").val());
+			var score = Number($(this).find(".played_score").val());
+			data["scores"].push(score);
+			if($(this).find(".played_bad").is(":checked"))
+			{
+				data["bad"] = $(this).find(".played_user_name").val();
+			}
+		});
+	
+		
+		$.ajax({
+			type: "POST",
+			url: "/json/match_register",
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			dataType: 'json',
+			success: function(result) {
+				console.log("ajax resp");
+				console.log(result);
+			}
+		});
+		console.log("ajax sent");
+		console.log(data);
+	
 	}
 	
 	function ajax_ownership_register()
@@ -119,6 +170,7 @@
 				<button id="button-own" class="button is-primary">Own it!</button>
 			</div>
 		  <div class="cell"><b>Owners</b><p>{{ owner_list|join(', ') }}</p></div>
+		  <div class="cell"><b>Recent Plays</b><p>{{ recent_plays|join(', ') }}</p></div>
 			<div class="cell"><b>Game Designers</b><p>{{ game_data['designers']|join(', ') }}</p></div>
 		    <div class="cell"><b>Game Mechanics</b><p>{{ game_data['mechanics']|join(', ') }}</p></div>
 	  </div>
@@ -172,12 +224,33 @@
     <section class="modal-card-body">
 	    <form action="/search.html">
 			  <div class="field-body">
-					<div class="xlabel">
-						Who?
-					</div>
+			    <div class="field">
+				    <div>
+					    How do you win the game?
+				    </div>
+					  <div class="select">
+						  <select id="played_score_type">
+							  <option value="most_points">Most Points</option>
+							  <option value="least_points">Least Points</option>
+							  <option value="ranking">1st/2nd/3rd</option>
+							  <option value="one_loser">No Winners/One Loser</option>
+						  </select>
+					  </div>
+					  <div class="control">
+					  </div>
+			    </div>
+			  </div>
+		    <div class="content">
 			    <div class="field">
 					  <div class="control is-expanded">
-							
+						  <table>
+							  <thead>
+							    <tr><th>Player</th><th>Score/Rank</th><th>Bad?</th></tr>
+							  </thead>
+							  <tbody id="user_play_table">
+							  </tbody>
+						  </table>
+						  <button type="button" id="add_player_line"><i class="fa-regular fa-square-plus fa-lg"></i></button></td>
 					  </div>
 					  <div class="control">
 					  </div>
@@ -187,7 +260,7 @@
     </section>
     <footer class="modal-card-foot">
       <div class="buttons">
-        <button class="button is-success">Save</button>
+        <button id="played_save_button" class="button is-success">Save</button>
       </div>
     </footer>
   </div>

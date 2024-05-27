@@ -6,19 +6,18 @@ import json
 
 # Project imports
 from database import get_db, make_query, get_timeformat
-from util import pickle_list, unpickle_list
+from util import pickle_list, unpickle_list, pickle_dict, unpickle_dict
 
 
 class Match:
 
     @classmethod
-    def register(cls, game_id: int, player_score_dict: Dict, meta_data: Optional[Dict] = None):
+    def register(cls, game_id: int, players: List, scores: List, score_type: str, meta_data: Optional[Dict] = None):
 
-        # Prepare dict
-        players = pickle_list(player_score_dict.keys())
-        scores = pickle_list(player_score_dict.values())
+        # Prepare data
+        meta_data = meta_data if meta_data else {}
+        meta_data["score_type"] = score_type
         stamp = datetime.now().strftime(get_timeformat())
-        meta_data = json.dumps(meta_data) if meta_data else "{}"
 
         # Prepare query
         query = make_query("INSERT INTO match_results (game_id, players, data, scores, datetime) "
@@ -27,13 +26,13 @@ class Match:
         # Open db, and execute insertion query
         with get_db() as db:
             cur = db.cursor()
-            cur.execute(query, [game_id, players, meta_data, scores, stamp])
+            cur.execute(query, [game_id, pickle_list(players), pickle_dict(meta_data), pickle_list(scores), stamp])
             cur.close()
 
     @classmethod
     def fetch_by_game(cls, game_id: int) -> List:
         # Prepare select query
-        query = make_query("SELECT * FROM match_results WHERE game_id = %s")
+        query = make_query("SELECT * FROM match_results WHERE game_id = %s ORDER BY datetime DESC")
 
         # Open db and perform query
         with get_db() as db:
@@ -58,7 +57,7 @@ class Match:
         md = dict(zip(keys, value_list))
 
         md["players"] = unpickle_list(md["players"])
-        md["data"] = json.loads(md["data"])
+        md["data"] = unpickle_dict(md["data"])
         md["scores"] = [int(x) for x in unpickle_list(md["scores"])] if md["scores"] else None
         md["datetime"] = datetime.strptime(md["datetime"], get_timeformat())
 

@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from games import Games
 from users import Users
+from match import Match
 
 app = Flask(__name__)
 
@@ -49,11 +50,24 @@ def json_ownership_register():
     return jsonify({"operation": "success"})
 
 
+@app.route("/json/match_register", methods=["GET", "POST"])
+def json_match_register():
+    game_id = request.get_json()["game_id"]
+    players = request.get_json()["players"]
+    scores = request.get_json()["scores"]
+    score_type = request.get_json()["score_type"]
+    bad_player = request.get_json()["bad"]
+    meta_data = {"bad": bad_player} if bad_player else {}
+    Match.register(game_id=game_id, players=players, scores=scores, score_type=score_type, meta_data=meta_data)
+    return jsonify({"operation": "success"})
+
+
 @app.route("/game/<game_id>", methods=["GET", "POST"])
 def game(game_id):
     game_data = Games.lookup(game_id)
     owner_list = Users.own_this_game(game_id)
-    return render_template("game.html", game_data=game_data, owner_list=owner_list)
+    recent_plays = Match.fetch_by_game(game_id)[:10]
+    return render_template("game.html", game_data=game_data, owner_list=owner_list, recent_plays=recent_plays)
 
 
 @app.route("/users", methods=["GET", "POST"])
