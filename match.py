@@ -12,7 +12,7 @@ from util import pickle_list, unpickle_list, pickle_dict, unpickle_dict
 class Match:
 
     @classmethod
-    def register(cls, game_id: int, players: List, scores: List, score_type: str, meta_data: Optional[Dict] = None):
+    def register(cls, game_id: int, player_id_list: List[int], scores: List, score_type: str, meta_data: Optional[Dict] = None):
 
         # Prepare data
         meta_data = meta_data if meta_data else {}
@@ -26,7 +26,7 @@ class Match:
         # Open db, and execute insertion query
         with get_db() as db:
             cur = db.cursor()
-            cur.execute(query, [game_id, pickle_list(players), pickle_dict(meta_data), pickle_list(scores), stamp])
+            cur.execute(query, [game_id, pickle_list(player_id_list), pickle_dict(meta_data), pickle_list(scores), stamp])
             cur.close()
 
     @classmethod

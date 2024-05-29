@@ -53,12 +53,12 @@ def json_ownership_register():
 @app.route("/json/match_register", methods=["GET", "POST"])
 def json_match_register():
     game_id = request.get_json()["game_id"]
-    players = request.get_json()["players"]
+    player_ids = Users.names_to_ids(request.get_json()["players"])
     scores = request.get_json()["scores"]
     score_type = request.get_json()["score_type"]
     bad_player = request.get_json()["bad"]
     meta_data = {"bad": bad_player} if bad_player else {}
-    Match.register(game_id=game_id, players=players, scores=scores, score_type=score_type, meta_data=meta_data)
+    Match.register(game_id=game_id, player_id_list=player_ids, scores=scores, score_type=score_type, meta_data=meta_data)
     return jsonify({"operation": "success"})
 
 

@@ -139,6 +139,14 @@ class Users:
         return list(games_set)
 
     @classmethod
+    def names_to_ids(cls, list_of_names: List[str]) -> List[int]:
+        return [cls.search(name, limit=1)[0]["user_id"] for name in list_of_names]
+
+    @classmethod
+    def ids_to_names(cls, list_of_ids: List[int]) -> List[str]:
+        return [cls.lookup(_id)["name"] for _id in list_of_ids]
+
+    @classmethod
     def _user_dict(cls, value_list: Iterable) -> Dict:
         keys = ["user_id", "name", "games_owned", "data"]
         d = dict(zip(keys, value_list))
@@ -149,9 +157,6 @@ class Users:
 
 if __name__ == "__main__":
 
-
-
-    games = Users.fetch_all_owned_games()
 
 
     pass
