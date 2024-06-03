@@ -87,7 +87,6 @@
 		data["game_id"] = {{ game_data["game_id"] }};
 		data["players"] = [];
 		data["scores"] = [];
-		data["score_type"] = $("#played_score_type").val();
 		data["bad"] = null;
 	
 		$(".played_dataset").each(function(){
@@ -108,8 +107,8 @@
 			contentType: "application/json",
 			dataType: 'json',
 			success: function(result) {
-				console.log("ajax resp");
-				console.log(result);
+				console.log("Game play registered");
+				location.reload();
 			}
 		});
 		console.log("ajax sent");
@@ -159,6 +158,7 @@
 {% block content %}
 
 
+
 <!-- Game Data -->
 <div class="container">
 	<div class="fixed-grid has-1-cols">
@@ -169,8 +169,25 @@
 				<button id="button-play" class="button is-primary">Played it!</button>
 				<button id="button-own" class="button is-primary">Own it!</button>
 			</div>
+		  <div class="cell"><b>Highest Scores</b>
+			  <div class="content" style="margin-top: -15px; margin-left: -15px;">
+				  <ol type="1">
+					  {% for player in top_players %}
+					  <li> {{ player }} ({{ top_players[player] }})</li>
+					  {% endfor %}
+				  </ol>
+			  </div>
+		  </div>
+		  <div class="cell"><b>Recent Plays</b>
+		    {% for play in recent_plays %}
+			  <p style="margin-bottom: 10px;">
+			    {% for player in play["players"] %}
+			      {{ player }} ({{ play["scores"][loop.index0] }}),
+			    {% endfor %}
+			  </p>
+			  {% endfor %}
+		  </div>
 		  <div class="cell"><b>Owners</b><p>{{ owner_list|join(', ') }}</p></div>
-		  <div class="cell"><b>Recent Plays</b><p>{{ recent_plays|join(', ') }}</p></div>
 			<div class="cell"><b>Game Designers</b><p>{{ game_data['designers']|join(', ') }}</p></div>
 		    <div class="cell"><b>Game Mechanics</b><p>{{ game_data['mechanics']|join(', ') }}</p></div>
 	  </div>
@@ -195,8 +212,6 @@
 			    <div class="field">
 					  <div class="control is-expanded">
 							<input class="input" type="text" list="users" name="user_search" id="user_search" placeholder="Reiner Knizia">
-						  <datalist id="users">
-						  </datalist>
 					  </div>
 					  <div class="control">
 					  </div>
@@ -225,17 +240,6 @@
 	    <form action="/search.html">
 			  <div class="field-body">
 			    <div class="field">
-				    <div>
-					    How do you win the game?
-				    </div>
-					  <div class="select">
-						  <select id="played_score_type">
-							  <option value="most_points">Most Points</option>
-							  <option value="least_points">Least Points</option>
-							  <option value="ranking">1st/2nd/3rd</option>
-							  <option value="one_loser">No Winners/One Loser</option>
-						  </select>
-					  </div>
 					  <div class="control">
 					  </div>
 			    </div>
@@ -266,6 +270,13 @@
   </div>
 </div>
 
+
+<!-- user datalist -->
+<datalist id="users">
+	{% for user in user_list %}
+	<option value="{{ user['name'] }}"></option>
+	{% endfor %}
+</datalist>
 
 
 {% endblock %}

@@ -1,6 +1,6 @@
 
 # Library imports
-from typing import Optional, Dict, List, Iterable
+from typing import Optional, Dict, List, Iterable, Tuple
 from datetime import datetime
 import json
 
@@ -12,11 +12,10 @@ from util import pickle_list, unpickle_list, pickle_dict, unpickle_dict
 class Match:
 
     @classmethod
-    def register(cls, game_id: int, player_id_list: List[int], scores: List, score_type: str, meta_data: Optional[Dict] = None):
+    def register(cls, game_id: int, player_id_list: List[int], scores: List, meta_data: Optional[Dict] = None):
 
         # Prepare data
         meta_data = meta_data if meta_data else {}
-        meta_data["score_type"] = score_type
         stamp = datetime.now().strftime(get_timeformat())
 
         # Prepare query
@@ -30,14 +29,15 @@ class Match:
             cur.close()
 
     @classmethod
-    def fetch_by_game(cls, game_id: int) -> List:
+    def fetch_by_game(cls, game_id: int, limit=-1) -> List:
         # Prepare select query
-        query = make_query("SELECT * FROM match_results WHERE game_id = %s ORDER BY datetime DESC")
+        q = "SELECT * FROM match_results WHERE game_id = %s ORDER BY datetime DESC"
+        q = f"{q};" if limit < 0 else f"{q} LIMIT {limit};"
 
         # Open db and perform query
         with get_db() as db:
             cur = db.cursor()
-            cur.execute(query, [int(game_id)])
+            cur.execute(make_query(q), [int(game_id)])
             return [cls._match_dict(x) for x in cur.fetchall()]
 
     @classmethod
@@ -50,6 +50,17 @@ class Match:
             cur = db.cursor()
             cur.execute(query, [f"%{player}%"])
             return [cls._match_dict(x) for x in cur.fetchall()]
+
+    @classmethod
+    def fetch_top_players_by_game(cls, game_id: int) -> Tuple[List, List]:
+        player_scores = {}
+        for match in cls.fetch_by_game(game_id):
+            for player, score in zip(match["players"], match["scores"]):
+                player_scores[player] = max(score, player_scores[player]) if player in player_scores else score
+
+        top_scores = sorted(player_scores.items(), key=lambda x: x[1], reverse=True)
+
+        return [x[0] for x in top_scores[:10]], [x[1] for x in top_scores[:10]]
 
     @classmethod
     def _match_dict(cls, value_list: Iterable):
@@ -70,10 +81,6 @@ class Match:
 
 if __name__ == "__main__":
 
-    Match.register(game_id=188, player_score_dict={"Sammy": 75, "John": 42, "Tim": 123}, meta_data={"hitler": "Dick"})
 
-    matches = Match.fetch_by_game(188)
-
-    peter_matches = Match.fetch_by_player("peter")
 
     pass

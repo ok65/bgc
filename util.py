@@ -25,12 +25,18 @@ def pickle_dict(in_dict: Dict) -> str:
 
 
 def unpickle_dict(pickled_dict: str) -> Dict:
+    if pickled_dict == "{}":
+        return {}
     flat = pickled_dict[1:-1].split(", ")
     return {flat[i]: flat[i + 1] for i in range(0, len(flat), 2)}
 
 
 def new_id() -> int:
     return uuid4().int & 0xFFFF
+
+
+def datetime_prettyprint(dt: datetime):
+    return dt.strftime("%d.%b.%y, %H:%M")
 
 
 def time_ago_in_words(dt):
@@ -41,9 +47,13 @@ def time_ago_in_words(dt):
 
     if diff < timedelta(minutes=10):
         return "just now"
-    elif diff < timedelta(days=7):
+
+    elif diff < timedelta(hours=24):
+        diff.hour
+
+
         minutes = diff.seconds // 60
-        if minutes < 60:
+        if minutes < 5:
             return f"{minutes} minutes ago"
         else:
             hours = minutes // 60
@@ -57,5 +67,5 @@ def time_ago_in_words(dt):
 
 if __name__ == "__main__":
 
-    dt = datetime(2024, 5, 26, 23, 0, tzinfo=pytz.timezone("Europe/London"))
-    print(time_ago_in_words(dt))
+    dt = datetime(2024, 6, 3, 21, 30, tzinfo=pytz.timezone("Europe/London"))
+    print(datetime_prettyprint(dt))

@@ -55,10 +55,9 @@ def json_match_register():
     game_id = request.get_json()["game_id"]
     player_ids = Users.names_to_ids(request.get_json()["players"])
     scores = request.get_json()["scores"]
-    score_type = request.get_json()["score_type"]
     bad_player = request.get_json()["bad"]
     meta_data = {"bad": bad_player} if bad_player else {}
-    Match.register(game_id=game_id, player_id_list=player_ids, scores=scores, score_type=score_type, meta_data=meta_data)
+    Match.register(game_id=game_id, player_id_list=player_ids, scores=scores, meta_data=meta_data)
     return jsonify({"operation": "success"})
 
 
@@ -66,8 +65,16 @@ def json_match_register():
 def game(game_id):
     game_data = Games.lookup(game_id)
     owner_list = Users.own_this_game(game_id)
-    recent_plays = Match.fetch_by_game(game_id)[:10]
-    return render_template("game.html", game_data=game_data, owner_list=owner_list, recent_plays=recent_plays)
+    #recent_plays = Match.fetch_by_game(game_id, limit=10)
+    recent_plays = [{"players": Users.ids_to_names(x["players"]), "scores": x["scores"]}
+                    for x in Match.fetch_by_game(game_id, limit=3)]
+    user_list = Users.list()
+    top_players = Match.fetch_top_players_by_game(game_id)
+    top_user_ids, top_scores = Match.fetch_top_players_by_game(game_id)
+    top_users = Users.ids_to_names(top_user_ids)
+    top_players = dict(zip(top_users[:3], top_scores[:3]))
+    return render_template("game.html", game_data=game_data, owner_list=owner_list, recent_plays=recent_plays,
+                           user_list=user_list, top_players=top_players)
 
 
 @app.route("/users", methods=["GET", "POST"])
