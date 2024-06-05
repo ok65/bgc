@@ -48,6 +48,10 @@
 	$( document ).ready(function() {
     console.log( "ready!" );
     
+    $("form").on("submit", function (e) {
+            e.preventDefault();
+        });
+    
     setInterval(function(){
         console.log("interval func");
         if($("#search_query").val() != query_string){
@@ -73,7 +77,7 @@
 
 <!-- Search bar -->
 <div class="container">
-	<form action="/search.html">
+	<form action="#">
 	  <div class="field-body">
 		<div class="xlabel">
 			Start typing a game name...
